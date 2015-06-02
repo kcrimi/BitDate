@@ -16,7 +16,9 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class ChoosingFragment extends Fragment implements
-        UserDataSource.UserDataCallbacks{
+        UserDataSource.UserDataCallbacks, CardStackContainer.SwipeCallbacks{
+
+    private static final String TAG = "ChoosingFragment";
 
     private CardStackContainer mCardStack;
     private List<User> mUsers;
@@ -34,7 +36,7 @@ public class ChoosingFragment extends Fragment implements
         mUsers = new ArrayList<>();
         mCardAdapter = new CardAdapter(getActivity(), mUsers);
         mCardStack.setAdapter(mCardAdapter);
-
+        mCardStack.setSwipeCallbacks(this);
         ImageButton nahButton = (ImageButton)v.findViewById(R.id.nah_button);
         nahButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,5 +59,15 @@ public class ChoosingFragment extends Fragment implements
     public void onUsersFetched(List<User> users) {
         mUsers.addAll(users);
         mCardAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSwipeLeft(User user) {
+        Log.d(TAG, "swiped left"+user.getFirstName());
+    }
+
+    @Override
+    public void onSwipeRight(User user) {
+        Log.d(TAG, "swiped right"+user.getFirstName());
     }
 }

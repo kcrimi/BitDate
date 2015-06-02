@@ -31,6 +31,8 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
     private CardView mBackCard;
     private int mNextPosition;
 
+    private SwipeCallbacks mSwipeCallbacks;
+
     public CardStackContainer(Context context) {
         this(context, null, 0);
     }
@@ -42,6 +44,10 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
     public CardStackContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mGestureDetector = new GestureDetector(context, new FlingListener());
+    }
+
+    public void setSwipeCallbacks(SwipeCallbacks swipeCallbacks) {
+        mSwipeCallbacks = swipeCallbacks;
     }
 
     public void setAdapter(CardAdapter adapter) {
@@ -82,11 +88,31 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
     }
 
     public void swipeRight(){
+        if (mSwipeCallbacks != null){
+            Log.d(TAG, "inside callback");
+            int position = getSwipedPosition();
+            mSwipeCallbacks.onSwipeRight(mAdapter.getItem(position));
+        }
         swipeCard(true);
     }
 
     public void swipeLeft(){
+        if (mSwipeCallbacks != null) {
+            Log.d(TAG, "inside callback");
+            int position = getSwipedPosition();
+            mSwipeCallbacks.onSwipeLeft(mAdapter.getItem(position));
+        }
         swipeCard(false);
+    }
+
+    private int getSwipedPosition() {
+        int position;
+        if(mBackCard != null){
+            position = mNextPosition - 2;
+        }else{
+            position = mNextPosition - 1;
+        }
+        return position;
     }
 
     private void swipeCard(boolean swipeRight){
@@ -109,15 +135,16 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
             mBackCard = null;
             addBackCard();
         }
+
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(mGestureDetector.onTouchEvent(event)){
             if (mPositionX < mOriginX) {
-                swipeCard(false);
+                swipeLeft();
             }else{
-                swipeCard(true);
+                swipeRight();
             }
             return true;
         }
@@ -169,5 +196,10 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             return true;
         }
+    }
+
+    public interface SwipeCallbacks{
+        public void onSwipeRight(User user);
+        public void onSwipeLeft(User user);
     }
 }
