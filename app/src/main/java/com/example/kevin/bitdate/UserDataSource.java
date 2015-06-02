@@ -1,5 +1,6 @@
 package com.example.kevin.bitdate;
 
+import android.app.Notification;
 import android.content.Context;
 import android.util.Log;
 
@@ -39,20 +40,34 @@ public class UserDataSource {
     }
 
     public static void getUnseenUsers(final UserDataCallbacks callback){
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereNotEqualTo("objectId", getCurrentUser().getId());
-        query.findInBackground(new FindCallback<ParseUser>() {
+        ParseQuery<ParseObject> seenUsersQuery = new ParseQuery<ParseObject>(ActionDataSource.TABLE_NAME);
+        seenUsersQuery.whereEqualTo(ActionDataSource.COLUMN_BY_USER, ParseUser.getCurrentUser().getObjectId());
+        seenUsersQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseUser> list, ParseException e) {
+            public void done(List<ParseObject> list, ParseException e) {
                 if (e == null){
-                    List<User> users = new ArrayList<User>();
-                    for (ParseUser parseUser : list){
-                        User user = parseUserToUser(parseUser);
-                        users.add(user);
+                    List<String> ids = new ArrayList<String>();
+                    for (ParseObject parseObject : list){
+                        ids.add(parseObject.getString(ActionDataSource.COLUMN_TO_USER));
                     }
-                    if (callback != null){
-                        callback.onUsersFetched(users);
-                    }
+                    ParseQuery<ParseUser> query = ParseUser.getQuery();
+                    query.whereNotEqualTo("objectId", getCurrentUser().getId());
+                    query.whereNotContainedIn("objectId", ids);
+                    query.findInBackground(new FindCallback<ParseUser>() {
+                        @Override
+                        public void done(List<ParseUser> list, ParseException e) {
+                            if (e == null){
+                                List<User> users = new ArrayList<User>();
+                                for (ParseUser parseUser : list){
+                                    User user = parseUserToUser(parseUser);
+                                    users.add(user);
+                                }
+                                if (callback != null){
+                                    callback.onUsersFetched(users);
+                                }
+                            }
+                        }
+                    });
                 }
             }
         });
