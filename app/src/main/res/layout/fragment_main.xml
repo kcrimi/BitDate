@@ -3,9 +3,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:clipChildren="false"
                 tools:context=".MainActivityFragment">
 
     <com.example.kevin.bitdate.CardStackContainer
+        android:id="@+id/card_stack"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/holo_blue_light"
