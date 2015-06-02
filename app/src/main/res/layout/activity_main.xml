@@ -5,46 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/fragment"
-        android:orientation="vertical"
-        android:name="com.example.kevin.bitdate.ChoosingFragment"
-        tools:layout="@layout/fragment_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include layout="@layout/activity_main_layout"/>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:background="?attr/colorPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-
-            <ImageView
-                android:id="@+id/logo_icon"
-                android:src="@drawable/ic_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <ImageView
-                android:id="@+id/chat_icon"
-                android:src="@drawable/ic_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </android.support.v7.widget.Toolbar>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/drawer"
-        android:layout_gravity="start"
-        android:text="Hey!"
-        android:background="@color/primary_dark_blue"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"/>
+    <include layout="@layout/activity_main_drawer"/>
 </android.support.v4.widget.DrawerLayout>
