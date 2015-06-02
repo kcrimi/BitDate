@@ -1,6 +1,7 @@
 package com.example.kevin.bitdate;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -9,12 +10,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.parse.Parse;
 import com.parse.ParseUser;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener {
+
+    private ImageView mChoosingIcon;
+    private ImageView mMatchesIcon;
+    private ViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +33,54 @@ public class MainActivity extends ActionBarActivity {
             startActivity(i);
         }
 
-        ViewPager pager = (ViewPager)findViewById(R.id.pager);
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        mPager = (ViewPager)findViewById(R.id.pager);
+        mPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        mPager.setOnPageChangeListener(this);
+
+        mChoosingIcon = (ImageView)findViewById(R.id.logo_icon);
+        mChoosingIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPager.setCurrentItem(0);
+            }
+        });
+        mMatchesIcon = (ImageView)findViewById(R.id.chat_icon);
+        mMatchesIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPager.setCurrentItem(1);
+            }
+        });
+        mChoosingIcon.setSelected(true);
+        toggleColor(mChoosingIcon);
+        toggleColor(mMatchesIcon);
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mChoosingIcon.setSelected(!mChoosingIcon.isSelected());
+        mMatchesIcon.setSelected(!mMatchesIcon.isSelected());
+        toggleColor(mChoosingIcon);
+        toggleColor(mMatchesIcon);
+    }
+
+    private void toggleColor(ImageView v) {
+        if (v.isSelected()){
+            v.setColorFilter(Color.WHITE);
+        }else{
+            v.setColorFilter(getResources().getColor(R.color.primary_dark_blue));
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter{
@@ -38,12 +91,18 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new ChoosingFragment();
+            switch (position){
+                case 0:
+                    return new ChoosingFragment();
+                case 1:
+                    return new MatchesFragment();
+            }
+            return null;
         }
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
     }
 
