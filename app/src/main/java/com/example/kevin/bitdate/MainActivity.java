@@ -1,6 +1,10 @@
 package com.example.kevin.bitdate;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +24,26 @@ public class MainActivity extends ActionBarActivity {
         if (UserDataSource.getCurrentUser() == null){
             Intent i = new Intent(this, SignInActivity.class);
             startActivity(i);
+        }
+
+        ViewPager pager = (ViewPager)findViewById(R.id.pager);
+        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+    }
+
+    public class PagerAdapter extends FragmentStatePagerAdapter{
+
+        PagerAdapter(FragmentManager fm){
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return new ChoosingFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
         }
     }
 
