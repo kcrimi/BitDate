@@ -26,6 +26,7 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
     private float mOriginY;
 
     private GestureDetector mGestureDetector;
+    private CardView mFrontCard;
 
     public CardStackContainer(Context context) {
         this(context, null, 0);
@@ -45,19 +46,38 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
         if (mAdapter.getCount() > 0) {
             CardView cardView = mAdapter.getView(0, null, this);
             cardView.setOnTouchListener(this);
+            mFrontCard = cardView;
             addView(cardView);
         }
+    }
+
+    public void swipeRight(){
+        swipeCard(true);
+    }
+
+    public void swipeLeft(){
+        swipeCard(false);
+    }
+
+    private void swipeCard(boolean swipeRight){
+        if (swipeRight){
+            mFrontCard.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_right));
+        }else{
+            mFrontCard.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left));
+        }
+
+        removeView(mFrontCard);
+        mFrontCard = null;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(mGestureDetector.onTouchEvent(event)){
             if (mPositionX < mOriginX) {
-                v.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left));
+                swipeCard(false);
             }else{
-                v.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_right));
+                swipeCard(true);
             }
-            removeView(v);
             return true;
         }
         int action = event.getAction();

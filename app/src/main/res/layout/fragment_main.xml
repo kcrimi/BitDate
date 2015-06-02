@@ -1,17 +1,41 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:clipChildren="false"
                 tools:context=".MainActivityFragment">
 
     <com.example.kevin.bitdate.CardStackContainer
         android:id="@+id/card_stack"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/holo_blue_light"
         android:layout_width="250dp"
         android:layout_height="270dp"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/nah_button"
+            android:src="@drawable/abc_btn_rating_star_off_mtrl_alpha"
+            android:background="@drawable/nah_button"
+            android:text="Nah"
+            android:layout_margin="16dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+        <ImageButton
+            android:id="@+id/yeah_button"
+            android:src="@drawable/abc_btn_rating_star_off_mtrl_alpha"
+            android:background="@drawable/yeah_button"
+            android:text="Yeah"
+            android:layout_margin="16dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </LinearLayout>
+
+</RelativeLayout>
