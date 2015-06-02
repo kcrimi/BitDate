@@ -19,6 +19,8 @@ public class ChoosingFragment extends Fragment implements
         UserDataSource.UserDataCallbacks{
 
     private CardStackContainer mCardStack;
+    private List<User> mUsers;
+    private CardAdapter mCardAdapter;
 
     public ChoosingFragment() {
     }
@@ -29,6 +31,9 @@ public class ChoosingFragment extends Fragment implements
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         mCardStack = (CardStackContainer)v.findViewById(R.id.card_stack);
         UserDataSource.getUnseenUsers(this);
+        mUsers = new ArrayList<>();
+        mCardAdapter = new CardAdapter(getActivity(), mUsers);
+        mCardStack.setAdapter(mCardAdapter);
 
         ImageButton nahButton = (ImageButton)v.findViewById(R.id.nah_button);
         nahButton.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +55,7 @@ public class ChoosingFragment extends Fragment implements
 
     @Override
     public void onUsersFetched(List<User> users) {
-        CardAdapter cardAdapter = new CardAdapter(getActivity(), users);
-        mCardStack.setAdapter(cardAdapter);
+        mUsers.addAll(users);
+        mCardAdapter.notifyDataSetChanged();
     }
 }

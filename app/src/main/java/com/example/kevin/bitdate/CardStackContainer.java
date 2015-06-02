@@ -1,6 +1,7 @@
 package com.example.kevin.bitdate;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -45,7 +46,21 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
 
     public void setAdapter(CardAdapter adapter) {
         mAdapter = adapter;
-        if (mAdapter.getCount() > 0) {
+        DataSetObserver dataSetObserver = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                addFrontCard();
+                addBackCard();
+            }
+        };
+        mAdapter.registerDataSetObserver(dataSetObserver);
+        addFrontCard();
+        addBackCard();
+    }
+
+    private void addFrontCard() {
+        if (mAdapter.getCount() > 0 && mFrontCard == null) {
             CardView cardView = mAdapter.getView(0, null, this);
             cardView.setOnTouchListener(this);
             cardView.setElevation(8);
@@ -53,11 +68,10 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
             addView(cardView);
             mNextPosition++;
         }
-        addBackCard();
     }
 
     private void addBackCard() {
-        if (mAdapter.getCount() > mNextPosition) {
+        if (mAdapter.getCount() > mNextPosition && mBackCard == null) {
             CardView cardView = mAdapter.getView(mNextPosition, null, this);
             cardView.setTranslationY(30);
             mBackCard = cardView;
@@ -83,6 +97,7 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
         }
 
         removeView(mFrontCard);
+        mFrontCard = null;
         if (mBackCard != null) {
             mFrontCard = null;
             mBackCard.animate()

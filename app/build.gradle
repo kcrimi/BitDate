@@ -29,4 +29,6 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
     compile 'com.android.support:cardview-v7:21.0.+'
+    compile 'com.kevincrimi.materiallibrary:materiallibrary:0.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.0'
 }
