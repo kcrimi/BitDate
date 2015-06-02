@@ -21,6 +21,7 @@ public class UserDataSource {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_FIRST_NAME = "firstName";
     private static final String COLUMN_PICTURE_URL = "pictureURL";
+    private static final String COLUMN_FACEBOOK_ID = "facebookId";
 
     private Context mContext;
 
@@ -62,6 +63,7 @@ public class UserDataSource {
         user.setFirstName(parseUser.getString(COLUMN_FIRST_NAME));
         user.setPictureURL(parseUser.getString(COLUMN_PICTURE_URL));
         user.setUsername(parseUser.getString(COLUMN_USERNAME));
+        user.setFacebookId(parseUser.getString(COLUMN_FACEBOOK_ID));
         return user;
     }
 
