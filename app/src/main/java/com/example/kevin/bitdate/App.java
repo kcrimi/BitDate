@@ -16,7 +16,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "app is run");
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
