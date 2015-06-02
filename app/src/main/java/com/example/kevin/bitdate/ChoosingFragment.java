@@ -2,10 +2,10 @@ package com.example.kevin.bitdate;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
@@ -15,7 +15,8 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ChoosingFragment extends Fragment {
+public class ChoosingFragment extends Fragment implements
+        UserDataSource.UserDataCallbacks{
 
     private CardStackContainer mCardStack;
 
@@ -27,14 +28,8 @@ public class ChoosingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         mCardStack = (CardStackContainer)v.findViewById(R.id.card_stack);
-        List<User> users = new ArrayList<User>();
-        for(int i = 0;i< 20;i++) {
-            User user = new User();
-            user.setFirstName("Kevin"+i);
-            users.add(user);
-        }
-        CardAdapter cardAdapter = new CardAdapter(getActivity(), users);
-        mCardStack.setAdapter(cardAdapter);
+        UserDataSource.getUnseenUsers(this);
+
         ImageButton nahButton = (ImageButton)v.findViewById(R.id.nah_button);
         nahButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,5 +46,11 @@ public class ChoosingFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onUsersFetched(List<User> users) {
+        CardAdapter cardAdapter = new CardAdapter(getActivity(), users);
+        mCardStack.setAdapter(cardAdapter);
     }
 }
