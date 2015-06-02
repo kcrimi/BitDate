@@ -33,7 +33,6 @@ public class ChoosingFragment extends Fragment {
             user.setFirstName("Kevin"+i);
             users.add(user);
         }
-        users.add(new User());
         CardAdapter cardAdapter = new CardAdapter(getActivity(), users);
         mCardStack.setAdapter(cardAdapter);
         ImageButton nahButton = (ImageButton)v.findViewById(R.id.nah_button);

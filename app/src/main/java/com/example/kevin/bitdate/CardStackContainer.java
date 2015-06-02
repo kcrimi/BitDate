@@ -27,6 +27,7 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
 
     private GestureDetector mGestureDetector;
     private CardView mFrontCard;
+    private CardView mBackCard;
 
     public CardStackContainer(Context context) {
         this(context, null, 0);
@@ -46,9 +47,17 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
         if (mAdapter.getCount() > 0) {
             CardView cardView = mAdapter.getView(0, null, this);
             cardView.setOnTouchListener(this);
+            cardView.setElevation(8);
             mFrontCard = cardView;
             addView(cardView);
         }
+        if (mAdapter.getCount() > 1) {
+            CardView cardView = mAdapter.getView(1, null, this);
+            cardView.setTranslationY(30);
+            mBackCard = cardView;
+            addView(cardView);
+        }
+        bringChildToFront(mFrontCard);
     }
 
     public void swipeRight(){
