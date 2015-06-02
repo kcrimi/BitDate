@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 /**
@@ -50,7 +51,15 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        mGestureDetector.onTouchEvent(event);
+        if(mGestureDetector.onTouchEvent(event)){
+            if (mPositionX < mOriginX) {
+                v.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left));
+            }else{
+                v.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_right));
+            }
+            removeView(v);
+            return true;
+        }
         int action = event.getAction();
         switch (action){
             case MotionEvent.ACTION_DOWN:
@@ -97,8 +106,7 @@ public class CardStackContainer extends RelativeLayout implements View.OnTouchLi
     private class FlingListener extends GestureDetector.SimpleOnGestureListener{
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            Log.d(TAG, "FLING");
-            return super.onFling(e1, e2, velocityX, velocityY);
+            return true;
         }
     }
 }
