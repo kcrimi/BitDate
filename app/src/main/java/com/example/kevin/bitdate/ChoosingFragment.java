@@ -63,12 +63,11 @@ public class ChoosingFragment extends Fragment implements
 
     @Override
     public void onSwipeLeft(User user) {
-        Log.d(TAG, "swiped left"+user.getFirstName());
         ActionDataSource.saveUserSkipped(user.getId());
     }
 
     @Override
     public void onSwipeRight(User user) {
-        Log.d(TAG, "swiped right"+user.getFirstName());
+        ActionDataSource.saveUserLiked(user.getId());
     }
 }
