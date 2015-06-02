@@ -1,6 +1,7 @@
 package com.example.kevin.bitdate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -16,8 +17,8 @@ import java.util.List;
  */
 public class UserDataSource {
 
+    private static final String TAG = "User Data Source";
     private static User sCurrentUser;
-    private static final String COLUMN_ID = "objectId";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_FIRST_NAME = "firstName";
     private static final String COLUMN_PICTURE_URL = "pictureURL";
@@ -59,7 +60,7 @@ public class UserDataSource {
 
     private static User parseUserToUser(ParseUser parseUser){
         User user = new User();
-        user.setId(parseUser.getString(COLUMN_ID));
+        user.setId(parseUser.getObjectId());
         user.setFirstName(parseUser.getString(COLUMN_FIRST_NAME));
         user.setPictureURL(parseUser.getString(COLUMN_PICTURE_URL));
         user.setUsername(parseUser.getString(COLUMN_USERNAME));
