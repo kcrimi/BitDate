@@ -21,7 +21,7 @@
 
         <ImageButton
             android:id="@+id/nah_button"
-            android:src="@drawable/abc_btn_rating_star_off_mtrl_alpha"
+            android:src="@drawable/ic_nah"
             android:background="@drawable/nah_button"
             android:text="Nah"
             android:layout_margin="16dp"
@@ -29,7 +29,7 @@
             android:layout_height="100dp"/>
         <ImageButton
             android:id="@+id/yeah_button"
-            android:src="@drawable/abc_btn_rating_star_off_mtrl_alpha"
+            android:src="@drawable/ic_yeah"
             android:background="@drawable/yeah_button"
             android:text="Yeah"
             android:layout_margin="16dp"
