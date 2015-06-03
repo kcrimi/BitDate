@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -42,6 +43,15 @@ public class ChatActivity extends ActionBarActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        Message msg = new Message();
+        msg.setDate(new Date());
+        msg.setText("Hey");
+        msg.setSender(UserDataSource.getCurrentUser().getId());
+        String[] ids = {mRecipient.getId(), UserDataSource.getCurrentUser().getId()};
+        Arrays.sort(ids);
+        String convoId = ids[0]+ids[1];
+        MessageDataSource.saveMessage(msg, convoId);
     }
 
     @Override
