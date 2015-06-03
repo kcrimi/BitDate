@@ -20,7 +20,8 @@ import java.util.Arrays;
 import java.util.Date;
 
 
-public class ChatActivity extends ActionBarActivity implements View.OnClickListener{
+public class ChatActivity extends ActionBarActivity implements View.OnClickListener,
+        MessageDataSource.MessagesCallbacks{
 
     public static final String USER_EXTRA = "USER";
     public static final String TAG = "Chat Activity";
@@ -31,6 +32,7 @@ public class ChatActivity extends ActionBarActivity implements View.OnClickListe
     private User mRecipient;
     private ListView mListView;
     private Date mLastMessageDate = new Date();
+    private String mConvoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,9 @@ public class ChatActivity extends ActionBarActivity implements View.OnClickListe
 
         mRecipient = (User)getIntent().getSerializableExtra(USER_EXTRA);
         mListView = (ListView)findViewById(R.id.messages_list);
+        mMessages = new ArrayList<>();
         mAdapter = new MessageAdapter(mMessages);
+        mListView.setAdapter(mAdapter);
 
         setTitle(mRecipient.getFirstName());
         if (getSupportActionBar() != null) {
@@ -49,6 +53,12 @@ public class ChatActivity extends ActionBarActivity implements View.OnClickListe
 
         Button sendMessage= (Button)findViewById(R.id.send_message);
         sendMessage.setOnClickListener(this);
+
+        String[] ids = {mRecipient.getId(), UserDataSource.getCurrentUser().getId()};
+        Arrays.sort(ids);
+        mConvoId = ids[0]+ids[1];
+
+        MessageDataSource.addMessageListener(mConvoId, this);
 
     }
 
@@ -61,10 +71,14 @@ public class ChatActivity extends ActionBarActivity implements View.OnClickListe
         msg.setDate(new Date());
         msg.setText(newMessage);
         msg.setSender(UserDataSource.getCurrentUser().getId());
-        String[] ids = {mRecipient.getId(), UserDataSource.getCurrentUser().getId()};
-        Arrays.sort(ids);
-        String convoId = ids[0]+ids[1];
-        MessageDataSource.saveMessage(msg, convoId);
+
+        MessageDataSource.saveMessage(msg, mConvoId);
+    }
+
+    @Override
+    public void onMessageAdded(Message message) {
+        mMessages.add(message);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
