@@ -29,44 +29,59 @@ public class MessageDataSource {
         sRef.child(convoId).child(key).setValue(msg);
     }
 
-    public static void addMessageListener(final String convoId, final MessagesCallbacks callbacks){
-        sRef.child(convoId).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                HashMap<String, String> msg = (HashMap)dataSnapshot.getValue();
-                Message message = new Message();
-                message.setSender(msg.get("sender"));
-                message.setText(msg.get("text"));
-                try {
-                    message.setDate(sDateFormat.parse(dataSnapshot.getKey()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                if(callbacks != null){
-                    callbacks.onMessageAdded(message);
-                }
+    public static MessagesListener addMessageListener(final String convoId, final MessagesCallbacks callbacks){
+        MessagesListener listener = new MessagesListener(callbacks);
+        sRef.child(convoId).addChildEventListener(listener);
+        return listener;
+    }
+
+    public static void stop(MessagesListener listener){
+        sRef.removeEventListener(listener);
+    }
+
+    public static class MessagesListener implements  ChildEventListener{
+
+        private MessagesCallbacks callbacks;
+
+        MessagesListener(MessagesCallbacks callbacks){
+
+        }
+
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            HashMap<String, String> msg = (HashMap)dataSnapshot.getValue();
+            Message message = new Message();
+            message.setSender(msg.get("sender"));
+            message.setText(msg.get("text"));
+            try {
+                message.setDate(sDateFormat.parse(dataSnapshot.getKey()));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+            if(callbacks != null){
+                callbacks.onMessageAdded(message);
             }
+        }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+        }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+        }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
-        });
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+
+        }
     }
 
     public interface MessagesCallbacks{
