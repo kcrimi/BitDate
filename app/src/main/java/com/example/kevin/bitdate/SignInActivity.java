@@ -50,6 +50,7 @@ public class SignInActivity extends ActionBarActivity {
                             getFacebookInfo();
                         }else{
                             Log.d(TAG, "Logged in existing user");
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }
@@ -79,6 +80,7 @@ public class SignInActivity extends ActionBarActivity {
                             @Override
                             public void done(ParseException e) {
                                 if (e == null){
+                                    setResult(RESULT_OK);
                                     finish();
                                 }
                             }

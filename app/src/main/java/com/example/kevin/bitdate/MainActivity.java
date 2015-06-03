@@ -15,29 +15,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.parse.Parse;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener {
 
+    private static final int SIGN_IN_REQUEST = 10;
     private ImageView mChoosingIcon;
     private ImageView mMatchesIcon;
     private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (UserDataSource.getCurrentUser() == null){
-            Intent i = new Intent(this, SignInActivity.class);
-            startActivity(i);
-        }
-
         mPager = (ViewPager)findViewById(R.id.pager);
-        mPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(this);
 
         mChoosingIcon = (ImageView)findViewById(R.id.logo_icon);
@@ -69,6 +69,22 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
                 R.string.close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+
+        if (UserDataSource.getCurrentUser() == null){
+            Intent i = new Intent(this, SignInActivity.class);
+            startActivityForResult(i, SIGN_IN_REQUEST);
+            return;
+        }
+
+        updateDrawer();
+
+    }
+
+    private void updateDrawer() {
+        ImageView userPhoto = (ImageView)findViewById(R.id.user_photo);
+        Picasso.with(this).load(UserDataSource.getCurrentUser().getLargePictureURL()).into(userPhoto);
+        TextView userName= (TextView)findViewById(R.id.user_name);
+        userName.setText(UserDataSource.getCurrentUser().getFirstName());
     }
 
     @Override
@@ -95,6 +111,14 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SIGN_IN_REQUEST && resultCode == RESULT_OK){
+            updateDrawer();
+            mPagerAdapter.notifyDataSetChanged();
+        }
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter{
