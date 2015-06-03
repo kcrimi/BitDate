@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,7 +20,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 
-public class ChatActivity extends ActionBarActivity {
+public class ChatActivity extends ActionBarActivity implements View.OnClickListener{
 
     public static final String USER_EXTRA = "USER";
     public static final String TAG = "Chat Activity";
@@ -44,9 +46,20 @@ public class ChatActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+
+        Button sendMessage= (Button)findViewById(R.id.send_message);
+        sendMessage.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        EditText newMessageView = (EditText)findViewById(R.id.new_message);
+        String newMessage = newMessageView.getText().toString();
+        newMessageView.setText("");
         Message msg = new Message();
         msg.setDate(new Date());
-        msg.setText("Hey");
+        msg.setText(newMessage);
         msg.setSender(UserDataSource.getCurrentUser().getId());
         String[] ids = {mRecipient.getId(), UserDataSource.getCurrentUser().getId()};
         Arrays.sort(ids);
