@@ -3,6 +3,7 @@ package com.example.kevin.bitdate;
 import android.app.Application;
 import android.util.Log;
 
+import com.firebase.client.Firebase;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 
@@ -21,5 +22,6 @@ public class App extends Application {
 
         Parse.initialize(this, "rgHspdCFiUuKeRqA6vtNjtGK1pLx6EtiuYAgyzgo", "jhzqFwzuqZN7xxk0LW4rFkQN37VRY0OCrE4XYEBa");
         ParseFacebookUtils.initialize(this);
+        Firebase.setAndroidContext(this);
     }
 }
