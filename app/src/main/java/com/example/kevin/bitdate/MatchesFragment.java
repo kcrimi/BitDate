@@ -1,12 +1,14 @@
 package com.example.kevin.bitdate;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,7 +21,8 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class MatchesFragment extends android.support.v4.app.Fragment
-        implements ActionDataSource.ActionDataCallbacks, UserDataSource.UserDataCallbacks{
+        implements ActionDataSource.ActionDataCallbacks, UserDataSource.UserDataCallbacks,
+        AdapterView.OnItemClickListener{
 
     private static final String TAG = "MatchesFragment";
     private MatchesAdapter mAdapter;
@@ -40,7 +43,16 @@ public class MatchesFragment extends android.support.v4.app.Fragment
         mUsers = new ArrayList<>();
         mAdapter = new MatchesAdapter(mUsers);
         matchesList.setAdapter(mAdapter);
+        matchesList.setOnItemClickListener(this);
         return v;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        User user = mUsers.get(position);
+        Intent i = new Intent(getActivity(), ChatActivity.class);
+        i.putExtra(ChatActivity.USER_EXTRA, user);
+        startActivity(i);
     }
 
     @Override

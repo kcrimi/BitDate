@@ -1,9 +1,11 @@
 package com.example.kevin.bitdate;
 
+import java.io.Serializable;
+
 /**
  * Created by kevin on 6/1/15.
  */
-public class User {
+public class User implements Serializable{
 
     private String mId;
     private String mUsername;
