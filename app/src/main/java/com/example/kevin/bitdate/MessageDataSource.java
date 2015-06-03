@@ -18,18 +18,20 @@ public class MessageDataSource {
     private static final String TAG = "MessageDataSource";
     private static final Firebase sRef = new Firebase("https://kcrimi-bitdate.firebaseio.com/messages");
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyyMMddmmss");
+    private static final String COLUMN_TEXT = "text";
+    private static final String COLUMN_SENDER = "sender";
 
 
     public static void saveMessage(Message message, String convoId){
         Date date = message.getDate();
         String key = sDateFormat.format(date);
         HashMap<String, String> msg = new HashMap<>();
-        msg.put("text", message.getText());
-        msg.put("sender", message.getSender());
+        msg.put(COLUMN_TEXT, message.getText());
+        msg.put(COLUMN_SENDER, message.getSender());
         sRef.child(convoId).child(key).setValue(msg);
     }
 
-    public static MessagesListener addMessageListener(final String convoId, final MessagesCallbacks callbacks){
+    public static MessagesListener addMessageListener(String convoId, final MessagesCallbacks callbacks){
         MessagesListener listener = new MessagesListener(callbacks);
         sRef.child(convoId).addChildEventListener(listener);
         return listener;
@@ -40,19 +42,17 @@ public class MessageDataSource {
     }
 
     public static class MessagesListener implements  ChildEventListener{
-
         private MessagesCallbacks callbacks;
-
         MessagesListener(MessagesCallbacks callbacks){
-
+            this.callbacks = callbacks;
         }
 
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             HashMap<String, String> msg = (HashMap)dataSnapshot.getValue();
             Message message = new Message();
-            message.setSender(msg.get("sender"));
-            message.setText(msg.get("text"));
+            message.setSender(msg.get(COLUMN_SENDER));
+            message.setText(msg.get(COLUMN_TEXT));
             try {
                 message.setDate(sDateFormat.parse(dataSnapshot.getKey()));
             } catch (ParseException e) {
